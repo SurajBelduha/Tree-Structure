@@ -1,0 +1,67 @@
+﻿@model List<Node>
+
+<div class="row">
+    <div class="col-12"></div>
+    <div class="col-12 mt-2">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Node Id</th>
+                    <th>Node Name</th>
+                    <th>Parent NodeId</th>
+                    <th>IsActive</th>
+                    <th>Start Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var node in Model)
+                {
+                    <tr>
+                        <td>@node.NodeId</td>
+                        <td>@node.NodeName</td>
+                        @if (node.ParentNode != null)
+                        {
+                            <td>@node.ParentNode.NodeName</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        <td>@node.IsActive</td>
+                        <td>@node.StartDate</td>
+                        <td>
+                            <a type="button" class="btn btn-primary btn-update" asp-controller="Nodes" asp-action="Update" asp-route-id="@node.NodeId"> Update</a>
+                            <button type="button" class="btn btn-danger btn-delete" data-id="@node.NodeId">Delete</button>
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Delete button click handler
+        $('.btn-delete').click(function () {
+            var nodeId = $(this).data('id');
+            if (confirm('Are you sure you want to delete this node?')) {
+                $.ajax({
+                    url: '/Nodes/Delete',
+                    type: 'POST',
+                    data: { id: nodeId },
+                    success: function (response) {
+                        alert('Node deleted successfully.');
+                        location.reload(); // Reload the page to reflect changes
+                    },
+                    error: function (xhr, status, error) {
+                        alert('Error deleting node: ' + error);
+                    }
+                });
+            }
+        });        
+    });
+</script>
+    

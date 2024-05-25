@@ -1,0 +1,41 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tree View</title>
+    <!-- Include jsTree CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css" asp-append-version="true" />
+    <!-- Include jsTree JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js" asp-append-version="true"></script>
+</head>
+<body>
+    <div id="treeContainer"></div>
+
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("TreeData", "Nodes")',
+                type: 'POST',
+                dataType: 'json',
+                success: function (data) {
+                    $('#treeContainer').jstree({
+                        'plugins': ['checkbox'],
+                        'core': {
+                            'data': data
+                        },
+                        'checkbox': {
+                            'keep_selected_style': false,
+                            'three_state': true, // Check/uncheck all children
+                            'cascade': 'down' // Cascade check/uncheck down the tree
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("An error occurred: " + status + "\nError: " + error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
